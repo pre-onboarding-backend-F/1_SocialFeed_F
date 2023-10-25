@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+    nest:
+        build:
+            context: .
+            dockerfile: DockerFile
+        volumes:
+            - ./src:/nest/src
+        restart: always
+        ports:
+            - 3000:3000
+        env_file:
+            - ./.env.docker
+
+    dev_db:
+        image: mysql:8
+        environment:
+            MYSQL_DATABASE: 'socialfeed' # 데이터베이스 이름
+            MYSQL_ROOT_PASSWORD: '1234' # root 유저 비밀번호
+        restart: always
+        ports:
+            - 3306:3306

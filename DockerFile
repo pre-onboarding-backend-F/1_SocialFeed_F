@@ -1,0 +1,9 @@
+FROM node:18
+
+COPY ./package.json /nest/
+COPY ./package-lock.json /nest/
+WORKDIR /nest/
+RUN npm install
+
+COPY . /nest/
+CMD npm run start:dev
