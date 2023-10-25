@@ -8,7 +8,7 @@ import { DatabaseModule } from './database/database.module';
     imports: [
         ConfigModule.forRoot({
             envFilePath: `.${process.env.NODE_ENV}.env`,
-        }), //
+        }),
         DatabaseModule,
     ],
     controllers: [AppController],
