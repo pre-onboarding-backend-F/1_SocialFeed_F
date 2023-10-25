@@ -6,7 +6,9 @@ import { DatabaseModule } from './database/database.module';
 
 @Module({
     imports: [
-        ConfigModule.forRoot(), //
+        ConfigModule.forRoot({
+            envFilePath: `.${process.env.NODE_ENV}.env`,
+        }), //
         DatabaseModule,
     ],
     controllers: [AppController],
