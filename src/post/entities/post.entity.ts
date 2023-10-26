@@ -5,25 +5,26 @@ import {
     Entity,
     ManyToOne,
     PrimaryGeneratedColumn,
-    UpdateDateColumn
-} from "typeorm";
-import {User} from "../../user/entities/user.entity";
+    UpdateDateColumn,
+} from 'typeorm';
+import { User } from '../../user/entities/user.entity';
 
 enum PostRole {
-    FACEBOOK="FACEBOOK",
-    TWITTER="TWITTER",
-    INSTAGRAM="INSTAGRAM",
-    THREADS="THREADS",
+    FACEBOOK = 'FACEBOOK',
+    TWITTER = 'TWITTER',
+    INSTAGRAM = 'INSTAGRAM',
+    THREADS = 'THREADS',
 }
+
 @Entity()
-export class Post{
+export class Post {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column({type: 'enum', enum: PostRole})
+    @Column({ type: 'enum', enum: PostRole })
     type: PostRole;
 
-    @Column({nullable: false})
+    @Column({ nullable: false })
     title: string;
 
     @Column()
@@ -32,13 +33,13 @@ export class Post{
     @Column()
     hashtags: string;
 
-    @Column({default: 0})
+    @Column({ default: 0 })
     viewCount: number;
 
-    @Column({default: 0})
+    @Column({ default: 0 })
     likeCount: number;
 
-    @Column({default: 0})
+    @Column({ default: 0 })
     shareCount: number;
 
     @CreateDateColumn()
@@ -47,6 +48,6 @@ export class Post{
     @UpdateDateColumn()
     updatedAt: Date;
 
-    @ManyToOne(()=>User)
+    @ManyToOne(() => User)
     user: User;
 }

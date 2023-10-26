@@ -1,19 +1,19 @@
-import {Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
-import {Min} from "class-validator";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Min } from 'class-validator';
 
 @Entity()
-export class User{
+export class User {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column({nullable: false})
+    @Column({ nullable: false })
     email: string;
 
-    @Column({nullable: false})
+    @Column({ nullable: false })
     account: string;
 
     @Min(10)
-    @Column({nullable: false})
+    @Column({ nullable: false })
     password: string;
 
     @Column()
@@ -22,7 +22,7 @@ export class User{
     @Column()
     signUpCode: number;
 
-    @Column({default: false})
+    @Column({ default: false })
     isCertify: boolean;
 
     @CreateDateColumn()
