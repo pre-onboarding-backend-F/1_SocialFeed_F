@@ -73,7 +73,7 @@ export class UserService {
 
         return {
             success: true,
-            mesage: '회원 가입 승인 되었습니다.',
+            message: '회원 가입 승인 되었습니다.',
             result: null,
         };
     }

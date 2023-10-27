@@ -41,7 +41,7 @@ export class UserController {
         } catch (e) {
             throw new HttpException(
                 {
-                    sucess: false,
+                    success: false,
                     message: e.message,
                     error: {
                         status: e.status,
