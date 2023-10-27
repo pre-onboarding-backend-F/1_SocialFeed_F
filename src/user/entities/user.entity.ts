@@ -1,33 +1,28 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { Min } from 'class-validator';
+import { Column, Entity } from 'typeorm';
+import { BaseEntity } from 'src/commons/base.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
-export class User {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
-
-    @Column({ nullable: false })
+export class User extends BaseEntity {
+    @Column()
     email: string;
 
-    @Column({ nullable: false })
+    @Column()
     account: string;
 
-    @Min(10)
-    @Column({ nullable: false })
+    @Column()
+    @Exclude()
     password: string;
 
     @Column({ nullable: true })
+    @Exclude()
     refreshToken: string;
 
     @Column()
+    @Exclude()
     signUpCode: number;
 
-    @Column({ default: false })
+    @Column({ default: false, type: 'bool', width: 1 })
+    @Exclude()
     isCertify: boolean;
-
-    @CreateDateColumn()
-    createdAt: Date;
-
-    @UpdateDateColumn()
-    updatedAt: Date;
 }
