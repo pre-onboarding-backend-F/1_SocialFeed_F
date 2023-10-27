@@ -7,5 +7,5 @@ export class ApproveUserDto extends OmitType(CreateUserDto, ['email'] as const) 
     @MinLength(6)
     @MaxLength(6)
     @IsNotEmpty()
-    signupCode: number;
+    signupCode: string;
 }
