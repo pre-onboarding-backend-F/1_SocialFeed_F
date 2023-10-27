@@ -1,12 +1,6 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
-
-enum PostRole {
-    FACEBOOK = 'FACEBOOK',
-    TWITTER = 'TWITTER',
-    INSTAGRAM = 'INSTAGRAM',
-    THREADS = 'THREADS',
-}
+import { PostRole } from '../../commons/post-role.enum';
 
 @Entity()
 export class Post {
