@@ -2,6 +2,7 @@ import { Body, ClassSerializerInterceptor, Controller, Post, UseInterceptors } f
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ApproveUserDto } from './dto/approve-user.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -57,5 +58,10 @@ export class UserController {
         //}
 
         return await this.userService.approveUser(approveUserDto);
+    }
+
+    @Post('login')
+    async login(@Body() loginDto: LoginDto) {
+        console.log('loginDto :>> ', loginDto);
     }
 }
