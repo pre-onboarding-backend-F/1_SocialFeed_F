@@ -1,6 +1,7 @@
 import { Body, Controller, HttpException, HttpStatus, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { ApproveUserDto } from './dto/approve-user.dto';
 
 @Controller('user')
 export class UserController {
@@ -27,6 +28,26 @@ export class UserController {
                         status: e.status,
                         name: e.name,
                     },
+                },
+                HttpStatus.BAD_REQUEST,
+            );
+        }
+    }
+
+    @Post('approve')
+    async approveUser(@Body() approveUserDto: ApproveUserDto) {
+        try {
+            return await this.userService.approveUser(approveUserDto);
+        } catch (e) {
+            throw new HttpException(
+                {
+                    success: false,
+                    message: e.message,
+                    error: {
+                        status: e.status,
+                        name: e.name,
+                    },
+                    date: new Date(),
                 },
                 HttpStatus.BAD_REQUEST,
             );
