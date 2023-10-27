@@ -1,4 +1,4 @@
-import { PostRole } from '../../commons/post-role.enum';
+import { PostRole } from '../../commons/enums/post-role.enum';
 
 export class CreatePostDto {
     userId: string;

@@ -1,16 +1,14 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, Entity, ManyToOne } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
-import { PostRole } from '../../commons/post-role.enum';
+import { PostRole } from '../../commons/enums/post-role.enum';
+import { BaseEntity } from 'src/commons/base.entity';
 
 @Entity()
-export class Post {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
-
+export class Post extends BaseEntity {
     @Column({ type: 'enum', enum: PostRole })
     type: PostRole;
 
-    @Column({ nullable: false })
+    @Column()
     title: string;
 
     @Column()
@@ -27,12 +25,6 @@ export class Post {
 
     @Column({ default: 0 })
     shareCount: number;
-
-    @CreateDateColumn()
-    createdAt: Date;
-
-    @UpdateDateColumn()
-    updatedAt: Date;
 
     @ManyToOne(() => User)
     user: User;
