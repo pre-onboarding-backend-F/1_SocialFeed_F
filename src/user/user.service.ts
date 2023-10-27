@@ -9,19 +9,18 @@ import * as bcrypt from 'bcryptjs';
 export class UserService {
     constructor(
         @InjectRepository(User)
-        private readonly userRepository: Repository<User>
+        private readonly userRepository: Repository<User>,
     ) {}
 
-    async checkUser(account: string): Promise<User|null> {
-        return this.userRepository.findOne({ where: { account }});
-
+    async checkUser(account: string): Promise<User | null> {
+        return this.userRepository.findOne({ where: { account } });
     }
 
     async createUser(createUserDto: CreateUserDto): Promise<User> {
         const { account, password, email } = createUserDto;
 
         const existingUser = await this.checkUser(account);
-        if(existingUser) { 
+        if (existingUser) {
             throw new BadRequestException('이미 회원가입 되어있는 계정입니다.');
         }
 
@@ -34,12 +33,9 @@ export class UserService {
             account,
             password: hashedPassword,
             email,
-            signUpCode: signUpCode
+            signUpCode: signUpCode,
         });
 
         return await this.userRepository.save(newUser);
-
-        
     }
-    
 }
