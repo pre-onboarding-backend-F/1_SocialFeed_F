@@ -1,10 +1,12 @@
-import { Body, ClassSerializerInterceptor, Controller, Post, UseInterceptors } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Post, UseFilters, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ApproveUserDto } from './dto/approve-user.dto';
+import { HttpExceptionFilter } from 'src/commons/filter/http-exception.filter';
 
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
+@UseFilters(HttpExceptionFilter)
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
