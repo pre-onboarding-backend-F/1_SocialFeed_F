@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, HttpException, HttpStatus, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 
@@ -15,23 +15,21 @@ export class UserController {
                 message: '회원 가입 성공',
                 result: {
                     email: user.email,
-                    account: user.account
-                }
+                    account: user.account,
+                },
             };
-        }
-        catch(e) {
-            throw new HttpException({
-                success: false,
-                message: e.message,
-                error: {
-                    status: e.status,
-                    name: e.name
-                }
-            },
-            HttpStatus.BAD_REQUEST
+        } catch (e) {
+            throw new HttpException(
+                {
+                    success: false,
+                    message: e.message,
+                    error: {
+                        status: e.status,
+                        name: e.name,
+                    },
+                },
+                HttpStatus.BAD_REQUEST,
             );
         }
     }
-
-
 }
