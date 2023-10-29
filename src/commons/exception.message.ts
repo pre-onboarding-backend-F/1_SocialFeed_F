@@ -34,3 +34,10 @@ export class PostsException {
         error: ExceptionObjError.BAD_REQUEST,
     };
 }
+
+export class StatsException {
+    static STATS_MAX_SEVEN_DAY: ExceptionObj = {
+        message: '최대 조회 가능한 날짜는 7일 입니다.',
+        error: ExceptionObjError.BAD_REQUEST,
+    };
+}

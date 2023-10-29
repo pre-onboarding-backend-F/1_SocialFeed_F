@@ -6,6 +6,7 @@ import { User } from 'src/user/entities/user.entity';
 import { GetUser } from 'src/commons/decorators/get.user.decorator';
 import { ResponseMessage } from 'src/commons/decorators/response.key.decorator';
 import { PostResponseMessage } from 'src/commons/class/post.response.message';
+import { StatsQueryDto } from './dto/stats-query.dto';
 import { PostGuard } from 'src/commons/guards/post.guard';
 import { GetPost } from 'src/commons/decorators/get.post.decorator';
 import { Post as PostType } from './entities/post.entity';
@@ -22,6 +23,12 @@ export class PostController {
     @ResponseMessage(PostResponseMessage.CREATE_POST)
     async createPost(@GetUser() user: User, @Body() createPostDto: CreatePostDto) {
         return await this.postService.createPost(user, createPostDto);
+    }
+
+    @Get('/stats')
+    async getStats(@Query() statsQueryDto: StatsQueryDto) {
+        console.log(statsQueryDto);
+        return await this.postService.getStats(statsQueryDto);
     }
 
     @Get('/:postId')
