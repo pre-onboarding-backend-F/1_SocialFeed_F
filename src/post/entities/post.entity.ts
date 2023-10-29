@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { SnsProvider } from '../../commons/enums/sns-provider.enum';
-import { BaseEntity } from 'src/commons/base.entity';
+import { BaseEntity } from '../../commons/base.entity';
 
 @Entity()
 export class Post extends BaseEntity {
