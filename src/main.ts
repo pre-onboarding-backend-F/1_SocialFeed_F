@@ -12,7 +12,14 @@ async function bootstrap() {
     const reflector = new Reflector();
 
     app.useGlobalInterceptors(new TransformInterceptor(reflector), new ClassSerializerInterceptor(reflector));
-    app.useGlobalPipes(new ValidationPipe());
+    app.useGlobalPipes(
+        new ValidationPipe({
+            transform: true,
+            transformOptions: {
+                enableImplicitConversion: true,
+            },
+        }),
+    );
     app.useGlobalFilters(new JwtExceptionFilter());
 
     await app.listen(PORT);
