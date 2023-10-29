@@ -19,9 +19,11 @@
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "test:e2e": "jest --config ./test/jest-e2e.json",
         "build:docker": "docker-compose --env-file .development.env build",
-        "start:docker": "docker-compose --env-file .development.env up"
+        "start:docker": "docker-compose --env-file .development.env up",
+        "seed": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run -d ./dataSource.ts"
     },
     "dependencies": {
+        "@faker-js/faker": "^8.2.0",
         "@nestjs/common": "^9.0.0",
         "@nestjs/config": "^3.1.1",
         "@nestjs/core": "^9.0.0",
@@ -35,6 +37,7 @@
         "bcryptjs": "^2.4.3",
         "class-transformer": "^0.5.1",
         "class-validator": "^0.14.0",
+        "dotenv": "^16.3.1",
         "joi": "^17.11.0",
         "jsonwebtoken": "^9.0.2",
         "mysql2": "^3.6.2",
@@ -42,7 +45,8 @@
         "passport-jwt": "^4.0.1",
         "reflect-metadata": "^0.1.13",
         "rxjs": "^7.2.0",
-        "typeorm": "^0.3.17"
+        "typeorm": "^0.3.17",
+        "typeorm-extension": "^3.1.1"
     },
     "devDependencies": {
         "@nestjs/cli": "^9.0.0",
