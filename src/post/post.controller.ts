@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards, Query, Request, UseFilters } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { AtGuard } from 'src/commons/guards/access.token.guard';
@@ -7,8 +7,14 @@ import { GetUser } from 'src/commons/decorators/get.user.decorator';
 import { ResponseMessage } from 'src/commons/decorators/response.key.decorator';
 import { PostResponseMessage } from 'src/commons/class/post.response.message';
 import { StatsQueryDto } from './dto/stats-query.dto';
+import { PostGuard } from 'src/commons/guards/post.guard';
+import { GetPost } from 'src/commons/decorators/get.post.decorator';
+import { Post as PostType } from './entities/post.entity';
+import { PostsQueryDto } from './dto/query-post.dto';
+import { HttpExceptionFilter } from 'src/commons/filter/http-exception.filter';
 
 @Controller('posts')
+@UseFilters(HttpExceptionFilter)
 export class PostController {
     constructor(private readonly postService: PostService) {}
 
@@ -28,5 +34,26 @@ export class PostController {
     @Get('/:postId')
     async getPost(@Param('postId') postId: string) {
         return await this.postService.getPost(postId);
+    }
+
+    @Patch('like/:postId')
+    @UseGuards(AtGuard, PostGuard)
+    @ResponseMessage(PostResponseMessage.LIKE)
+    async like(@GetPost() post: PostType) {
+        return await this.postService.like(post);
+    }
+
+    @Patch('share/:postId')
+    @UseGuards(AtGuard, PostGuard)
+    @ResponseMessage(PostResponseMessage.SHARE)
+    async share(@GetPost() post: PostType) {
+        return await this.postService.share(post);
+    }
+
+    @Get()
+    @UseGuards(AtGuard)
+    @ResponseMessage(PostResponseMessage.FIND_POSTS)
+    async findPosts(@Query() query: PostsQueryDto, @Request() req) {
+        return this.postService.findPosts(query, req.user.account);
     }
 }
