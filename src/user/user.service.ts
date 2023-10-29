@@ -5,9 +5,11 @@ import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcryptjs';
 import { ApproveUserDto } from './dto/approve-user.dto';
+import { UsersException } from 'src/commons/exception.message';
 import { JwtService } from 'src/jwt/jwt.service';
 import { LoginDto } from './dto/login.dto';
 import { TokenPayload } from 'src/commons/interfaces/token.payload';
+
 @Injectable()
 export class UserService {
     constructor(
@@ -17,9 +19,7 @@ export class UserService {
     ) {}
 
     async isUserExist(options: FindOptionsWhere<User>): Promise<boolean> {
-        return this.userRepository.exist({
-            where: options,
-        });
+        return this.userRepository.exist({ where: options });
     }
 
     async login(loginDto: LoginDto) {
@@ -71,10 +71,7 @@ export class UserService {
         const { account, password, email } = createUserDto;
 
         const isExist = await this.isUserExist({ account });
-
-        if (isExist) {
-            throw new BadRequestException('이미 회원가입 되어있는 계정입니다.');
-        }
+        if (isExist) throw new BadRequestException(UsersException.USER_ACCOUNT_ALREADY_EXISTS);
 
         const signUpCode = this.generateSignUpCode();
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -105,17 +102,15 @@ export class UserService {
         const { account, password, signupCode } = approveUserDto;
 
         const user = await this.findOne({ account });
+        if (!user) throw new BadRequestException(UsersException.USER_NOT_EXISTS);
 
-        if (!user) throw new BadRequestException('존재하지 않는 계정입니다.');
-
-        if (user.isCertify) throw new BadRequestException('이미 가입승인된 계정입니다.');
+        if (user.isCertify) throw new BadRequestException(UsersException.USER_ALREADY_CERTIFIED);
 
         const isPasswordMatched = await bcrypt.compare(password, user.password);
-        if (!isPasswordMatched) throw new BadRequestException('패스워드가 일치하지 않습니다.');
+        if (!isPasswordMatched) throw new BadRequestException(UsersException.USER_PASSWORD_NOT_MATCHED);
 
         const isSignupCodeMatched = user.signUpCode === parseInt(signupCode);
-
-        if (!isSignupCodeMatched) throw new BadRequestException('인증코드가 일치하지 않습니다.');
+        if (!isSignupCodeMatched) throw new BadRequestException(UsersException.USER_SIGNUPCODE_NOT_MATCHED);
 
         await this.userRepository.update({ id: user.id }, { isCertify: true });
     }

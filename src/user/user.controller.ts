@@ -1,3 +1,4 @@
+
 import { Body, ClassSerializerInterceptor, Controller, Post, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -9,9 +10,11 @@ import { User } from './entities/user.entity';
 import { RtGuard } from 'src/commons/guards/refresh.token.guard';
 import { ResponseMessage } from 'src/commons/decorators/response.key.decorator';
 import { UserResponseMessage } from 'src/commons/class/user.response.message';
+import { HttpExceptionFilter } from 'src/commons/filter/http-exception.filter';
 
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
+@UseFilters(HttpExceptionFilter)
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
