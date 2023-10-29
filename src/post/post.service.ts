@@ -96,7 +96,7 @@ export class PostService {
     async share(post: Post) {
         await this.postRepository.update(post.id, { shareCount: post.shareCount + 1 });
     }
-  
+
     async paginateQuery(query: SelectQueryBuilder<Post>, page: number, pageCount: number): Promise<Post[]> {
         const skip = page * pageCount;
         const posts = await query.skip(skip).take(pageCount).getMany();
