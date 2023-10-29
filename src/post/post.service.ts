@@ -50,4 +50,12 @@ export class PostService {
         const result = await this.postRepository.save({ ...findPost, viewCount });
         return result;
     }
+
+    async like(post: Post) {
+        await this.postRepository.update(post.id, { likeCount: post.likeCount + 1 });
+    }
+
+    async share(post: Post) {
+        await this.postRepository.update(post.id, { shareCount: post.shareCount + 1 });
+    }
 }
