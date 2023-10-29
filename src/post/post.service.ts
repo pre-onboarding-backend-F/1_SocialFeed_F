@@ -3,7 +3,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Post } from './entities/post.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PostsException } from '../commons/exception.message';
+import { PostsException, StatsException } from '../commons/exception.message';
 import { CreatePostDto } from './dto/create-post.dto';
 @Injectable()
 export class PostService {
@@ -49,5 +49,39 @@ export class PostService {
         const viewCount = findPost.viewCount + 1;
         const result = await this.postRepository.save({ ...findPost, viewCount });
         return result;
+    }
+
+    async getStats(statsQueryDto) {
+        if (!statsQueryDto.value) statsQueryDto.value = 'COUNT';
+        if (!statsQueryDto.end) statsQueryDto.end = new Date().toISOString();
+        if (!statsQueryDto.start) {
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+            statsQueryDto.start = sevenDaysAgo.toISOString();
+        }
+        const svenDays = 7 * 24 * 60 * 60 * 1000;
+
+        if (new Date(statsQueryDto.end).getTime() - new Date(statsQueryDto.start).getTime() > svenDays)
+            throw new BadRequestException(StatsException.STATS_MAX_SEVEN_DAY);
+
+        const qb = this.postRepository.createQueryBuilder('post').select('DATE(post.createdAt');
+
+        if (statsQueryDto.value === 'count') {
+            //qb.addSelect('COUNT(post.id)', 'sum');
+        } else if (statsQueryDto.value === 'view_count') {
+            qb.addSelect('COUNT(viewCount)', 'sum');
+        } else if (statsQueryDto.value === 'like_count') {
+            qb.addSelect('COUNT(likeCount)', 'sum');
+        } else if (statsQueryDto.value === 'share_count') {
+            qb.addSelect('COUNT(shareCount)', 'sum');
+        }
+
+        const result = await qb
+            .andWhere('DATE(post.createdAt) BETWEEN (:start, INTERVAL 1 DAY) AND :end', {
+                start: statsQueryDto.start,
+                end: statsQueryDto.end,
+            })
+            .groupBy('DATE(post.createdAt)')
+            .getRawMany();
     }
 }
