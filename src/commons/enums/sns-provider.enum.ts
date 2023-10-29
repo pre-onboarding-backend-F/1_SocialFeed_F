@@ -1,4 +1,4 @@
-export enum PostRole {
+export enum SnsProvider {
     FACEBOOK = 'FACEBOOK',
     TWITTER = 'TWITTER',
     INSTAGRAM = 'INSTAGRAM',

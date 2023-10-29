@@ -1,9 +1,15 @@
-import { PostRole } from '../../commons/enums/post-role.enum';
+import { IsEnum, IsString } from 'class-validator';
+import { SnsProvider } from '../../commons/enums/sns-provider.enum';
 
 export class CreatePostDto {
-    userId: string;
+    @IsString()
     title: string;
+
+    @IsString()
     content: string;
-    hashtags: string;
-    type: PostRole;
+
+    hashtags: string[];
+
+    @IsEnum(SnsProvider)
+    type: SnsProvider;
 }

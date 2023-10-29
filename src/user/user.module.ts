@@ -11,5 +11,6 @@ import { RtStrategy } from 'src/commons/strategy/refresh.token.strategy';
     imports: [TypeOrmModule.forFeature([User]), JwtModule],
     controllers: [UserController],
     providers: [UserService, AtStrategy, RtStrategy],
+    exports: [UserService],
 })
 export class UserModule {}

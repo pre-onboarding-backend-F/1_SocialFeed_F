@@ -1,12 +1,12 @@
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
-import { PostRole } from '../../commons/enums/post-role.enum';
+import { SnsProvider } from '../../commons/enums/sns-provider.enum';
 import { BaseEntity } from 'src/commons/base.entity';
 
 @Entity()
 export class Post extends BaseEntity {
-    @Column({ type: 'enum', enum: PostRole })
-    type: PostRole;
+    @Column({ type: 'enum', enum: SnsProvider })
+    type: SnsProvider;
 
     @Column()
     title: string;
@@ -14,8 +14,8 @@ export class Post extends BaseEntity {
     @Column()
     content: string;
 
-    @Column()
-    hashtags: string;
+    @Column({ type: 'json' })
+    hashtags: string[];
 
     @Column({ default: 0 })
     viewCount: number;
