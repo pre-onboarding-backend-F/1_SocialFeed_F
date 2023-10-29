@@ -11,6 +11,7 @@ export class JwtExceptionFilter implements ExceptionFilter {
         const status = HttpStatus.BAD_REQUEST;
 
         response.status(status).json({
+            success: false,
             statusCode: status,
             error: exception.name,
             message: exception.message,

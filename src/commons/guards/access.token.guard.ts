@@ -1,6 +1,6 @@
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { JsonWebTokenError } from 'jsonwebtoken';
+import { InvalidTokenError } from '../errors/jwt-errors';
 
 @Injectable()
 export class AtGuard extends AuthGuard('jwt-access-token') {
@@ -9,7 +9,7 @@ export class AtGuard extends AuthGuard('jwt-access-token') {
     }
 
     handleRequest(err: any, user: any) {
-        if (!user) throw new JsonWebTokenError('만료됐거나 유효하지 않은 토큰입니다.');
+        if (!user) throw new InvalidTokenError();
         return user;
     }
 }
