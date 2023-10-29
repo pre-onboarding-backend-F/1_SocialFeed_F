@@ -6,16 +6,61 @@ import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcryptjs';
 import { ApproveUserDto } from './dto/approve-user.dto';
 import { UsersException } from 'src/commons/exception.message';
+import { JwtService } from 'src/jwt/jwt.service';
+import { LoginDto } from './dto/login.dto';
+import { TokenPayload } from 'src/commons/interfaces/token.payload';
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+        private readonly jwtService: JwtService,
     ) {}
 
     async isUserExist(options: FindOptionsWhere<User>): Promise<boolean> {
         return this.userRepository.exist({ where: options });
+    }
+
+    async login(loginDto: LoginDto) {
+        const { account, password } = loginDto;
+
+        const isExist = await this.isUserExist({ account });
+
+        if (isExist) {
+            const user = await this.findOne({ account });
+
+            if (!user.isCertify) throw new BadRequestException('회원 가입 승인이 되지 않은 계정입니다.');
+
+            const isMatched = await bcrypt.compare(password, user.password);
+
+            if (isMatched) {
+                const accessToken = this.jwtService.generateAccessToken({ id: user.id, account: user.account });
+                const refreshToken = this.jwtService.generateRefreshToken({ id: user.id, account: user.account });
+
+                await this.userRepository.update({ account }, { refreshToken });
+
+                return {
+                    accessToken,
+                    refreshToken,
+                };
+            }
+
+            throw new BadRequestException('패스워드가 일치하지 않습니다.');
+        }
+
+        throw new BadRequestException('존재하지 않는 계정입니다.');
+    }
+
+    async refresh(user: User) {
+        const payload: TokenPayload = { id: user.id, account: user.account };
+        return {
+            accessToken: this.jwtService.generateAccessToken(payload),
+        };
+    }
+
+    async logout(user: User) {
+        await this.userRepository.update({ id: user.id }, { refreshToken: null });
     }
 
     async findOne(options: FindOptionsWhere<User>): Promise<User | null> {
@@ -68,11 +113,5 @@ export class UserService {
         if (!isSignupCodeMatched) throw new BadRequestException(UsersException.USER_SIGNUPCODE_NOT_MATCHED);
 
         await this.userRepository.update({ id: user.id }, { isCertify: true });
-
-        return {
-            success: true,
-            message: '회원 가입 승인 되었습니다.',
-            result: null,
-        };
     }
 }

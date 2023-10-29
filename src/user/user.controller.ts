@@ -1,7 +1,15 @@
-import { Body, ClassSerializerInterceptor, Controller, Post, UseFilters, UseInterceptors } from '@nestjs/common';
+
+import { Body, ClassSerializerInterceptor, Controller, Post, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ApproveUserDto } from './dto/approve-user.dto';
+import { LoginDto } from './dto/login.dto';
+import { AtGuard } from 'src/commons/guards/access.token.guard';
+import { GetUser } from 'src/commons/decorators/get.user.decorator';
+import { User } from './entities/user.entity';
+import { RtGuard } from 'src/commons/guards/refresh.token.guard';
+import { ResponseMessage } from 'src/commons/decorators/response.key.decorator';
+import { UserResponseMessage } from 'src/commons/class/user.response.message';
 import { HttpExceptionFilter } from 'src/commons/filter/http-exception.filter';
 
 @Controller('users')
@@ -11,53 +19,34 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @Post()
-    async createUser(@Body() createUserDto: CreateUserDto) {
-        //try {
-        //    const user = await this.userService.createUser(createUserDto);
-        //    return {
-        //        success: true,
-        //        message: '회원 가입 성공',
-        //        result: {
-        //            email: user.email,
-        //            account: user.account,
-        //        },
-        //    };
-        //} catch (e) {
-        //    throw new HttpException(
-        //        {
-        //            success: false,
-        //            message: e.message,
-        //            error: {
-        //                status: e.status,
-        //                name: e.name,
-        //            },
-        //        },
-        //        HttpStatus.BAD_REQUEST,
-        //    );
-        //}
-
+    @ResponseMessage(UserResponseMessage.SIGN_UP)
+    async signUp(@Body() createUserDto: CreateUserDto) {
         return await this.userService.createUser(createUserDto);
     }
 
     @Post('approve')
+    @ResponseMessage(UserResponseMessage.APPROVE)
     async approveUser(@Body() approveUserDto: ApproveUserDto) {
-        //try {
-        //    return await this.userService.approveUser(approveUserDto);
-        //} catch (e) {
-        //    throw new HttpException(
-        //        {
-        //            success: false,
-        //            message: e.message,
-        //            error: {
-        //                status: e.status,
-        //                name: e.name,
-        //            },
-        //            date: new Date(),
-        //        },
-        //        HttpStatus.BAD_REQUEST,
-        //    );
-        //}
-
         return await this.userService.approveUser(approveUserDto);
+    }
+
+    @Post('login')
+    @ResponseMessage(UserResponseMessage.SIGN_IN)
+    async signIn(@Body() loginDto: LoginDto) {
+        return await this.userService.login(loginDto);
+    }
+
+    @Post('logout')
+    @UseGuards(AtGuard)
+    @ResponseMessage(UserResponseMessage.LOG_OUT)
+    async logout(@GetUser() user: User) {
+        return await this.userService.logout(user);
+    }
+
+    @Post('refresh')
+    @UseGuards(RtGuard)
+    @ResponseMessage(UserResponseMessage.REFRESH)
+    async refresh(@GetUser() user: User) {
+        return await this.userService.refresh(user);
     }
 }
