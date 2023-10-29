@@ -27,3 +27,10 @@ export class UsersException {
         error: ExceptionObjError.BAD_REQUEST,
     };
 }
+
+export class PostsException {
+    static POST_NOT_EXISTS: ExceptionObj = {
+        message: '게시물이 존재하지 않습니다',
+        error: ExceptionObjError.BAD_REQUEST,
+    };
+}
