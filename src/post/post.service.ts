@@ -1,9 +1,8 @@
 import { User } from './../user/entities/user.entity';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Repository, Brackets, SelectQueryBuilder } from 'typeorm';
 import { Post } from './entities/post.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PostsException } from '../commons/exception.message';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostsQueryDto } from './dto/query-post.dto';
 import { orderMappings } from 'src/commons/enums/order-role.enum';
