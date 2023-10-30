@@ -9,27 +9,27 @@ import { Request } from 'express';
 
 @Injectable()
 export class RtStrategy extends PassportStrategy(Strategy, 'jwt-refresh-token') {
-    constructor(
-        @Inject(jwtConfiguration.KEY)
-        private readonly config: ConfigType<typeof jwtConfiguration>,
-        private readonly userService: UserService,
-    ) {
-        super({
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            passReqToCallback: true,
-            secretOrKey: config.refresh.secretKey,
-        });
-    }
+	constructor(
+		@Inject(jwtConfiguration.KEY)
+		private readonly config: ConfigType<typeof jwtConfiguration>,
+		private readonly userService: UserService,
+	) {
+		super({
+			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+			passReqToCallback: true,
+			secretOrKey: config.refresh.secretKey,
+		});
+	}
 
-    async validate(req: Request, payload: TokenPayload) {
-        const refreshToken = req.headers.authorization.split(' ')[1];
-        const isExist = await this.userService.isUserExist({ id: payload.id });
+	async validate(req: Request, payload: TokenPayload) {
+		const refreshToken = req.headers.authorization.split(' ')[1];
+		const isExist = await this.userService.isUserExist({ id: payload.id });
 
-        if (isExist) {
-            const user = await this.userService.findOne({ id: payload.id });
+		if (isExist) {
+			const user = await this.userService.findOne({ id: payload.id });
 
-            const isMatched = refreshToken === user.refreshToken;
-            if (isMatched) return user;
-        }
-    }
+			const isMatched = refreshToken === user.refreshToken;
+			if (isMatched) return user;
+		}
+	}
 }

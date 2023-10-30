@@ -1,4 +1,4 @@
 export enum StatsTypeEnum {
-    DATE = 'DATE',
-    HOUR = 'HOUR',
+	DATE = 'DATE',
+	HOUR = 'HOUR',
 }

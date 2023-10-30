@@ -1,5 +1,5 @@
 export enum SearchRole {
-    title = 'title',
-    content = 'content',
-    titleContent = 'title+content',
+	title = 'title',
+	content = 'content',
+	titleContent = 'title+content',
 }

@@ -16,44 +16,44 @@ import { HttpExceptionFilter } from 'src/commons/filter/http-exception.filter';
 @Controller('posts')
 @UseFilters(HttpExceptionFilter)
 export class PostController {
-    constructor(private readonly postService: PostService) {}
+	constructor(private readonly postService: PostService) {}
 
-    @Post()
-    @UseGuards(AtGuard)
-    @ResponseMessage(PostResponseMessage.CREATE_POST)
-    async createPost(@GetUser() user: User, @Body() createPostDto: CreatePostDto) {
-        return await this.postService.createPost(user, createPostDto);
-    }
+	@Post()
+	@UseGuards(AtGuard)
+	@ResponseMessage(PostResponseMessage.CREATE_POST)
+	async createPost(@GetUser() user: User, @Body() createPostDto: CreatePostDto) {
+		return await this.postService.createPost(user, createPostDto);
+	}
 
-    @Get('/stats')
-    async getStats(@Query() statsQueryDto: StatsQueryDto) {
-        console.log(statsQueryDto);
-        return await this.postService.getStats(statsQueryDto);
-    }
+	@Get('/stats')
+	async getStats(@Query() statsQueryDto: StatsQueryDto) {
+		console.log(statsQueryDto);
+		return await this.postService.getStats(statsQueryDto);
+	}
 
-    @Get('/:postId')
-    async getPost(@Param('postId') postId: string) {
-        return await this.postService.getPost(postId);
-    }
+	@Get('/:postId')
+	async getPost(@Param('postId') postId: string) {
+		return await this.postService.getPost(postId);
+	}
 
-    @Patch('like/:postId')
-    @UseGuards(AtGuard, PostGuard)
-    @ResponseMessage(PostResponseMessage.LIKE)
-    async like(@GetPost() post: PostType) {
-        return await this.postService.like(post);
-    }
+	@Patch('like/:postId')
+	@UseGuards(AtGuard, PostGuard)
+	@ResponseMessage(PostResponseMessage.LIKE)
+	async like(@GetPost() post: PostType) {
+		return await this.postService.like(post);
+	}
 
-    @Patch('share/:postId')
-    @UseGuards(AtGuard, PostGuard)
-    @ResponseMessage(PostResponseMessage.SHARE)
-    async share(@GetPost() post: PostType) {
-        return await this.postService.share(post);
-    }
+	@Patch('share/:postId')
+	@UseGuards(AtGuard, PostGuard)
+	@ResponseMessage(PostResponseMessage.SHARE)
+	async share(@GetPost() post: PostType) {
+		return await this.postService.share(post);
+	}
 
-    @Get()
-    @UseGuards(AtGuard)
-    @ResponseMessage(PostResponseMessage.FIND_POSTS)
-    async findPosts(@Query() query: PostsQueryDto, @Request() req) {
-        return this.postService.findPosts(query, req.user.account);
-    }
+	@Get()
+	@UseGuards(AtGuard)
+	@ResponseMessage(PostResponseMessage.FIND_POSTS)
+	async findPosts(@Query() query: PostsQueryDto, @Request() req) {
+		return this.postService.findPosts(query, req.user.account);
+	}
 }

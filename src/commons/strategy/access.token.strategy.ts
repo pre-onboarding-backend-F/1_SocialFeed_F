@@ -8,20 +8,20 @@ import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AtStrategy extends PassportStrategy(Strategy, 'jwt-access-token') {
-    constructor(
-        @Inject(jwtConfiguration.KEY)
-        private readonly config: ConfigType<typeof jwtConfiguration>,
-        private readonly userService: UserService,
-    ) {
-        super({
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            secretOrKey: config.access.secretKey,
-        });
-    }
+	constructor(
+		@Inject(jwtConfiguration.KEY)
+		private readonly config: ConfigType<typeof jwtConfiguration>,
+		private readonly userService: UserService,
+	) {
+		super({
+			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+			secretOrKey: config.access.secretKey,
+		});
+	}
 
-    async validate(payload: TokenPayload) {
-        const isExist = await this.userService.isUserExist({ id: payload.id });
+	async validate(payload: TokenPayload) {
+		const isExist = await this.userService.isUserExist({ id: payload.id });
 
-        if (isExist) return await this.userService.findOne({ id: payload.id });
-    }
+		if (isExist) return await this.userService.findOne({ id: payload.id });
+	}
 }
