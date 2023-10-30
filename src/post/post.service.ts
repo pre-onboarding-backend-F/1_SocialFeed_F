@@ -50,11 +50,9 @@ export class PostService {
 		return this.postRepository.findOne({ where: { id: postId } });
 	}
 
-	async getPost(postId: string): Promise<Post> {
-		const findPost = await this.findOne(postId);
-		if (!findPost) throw new BadRequestException(PostsException.POST_NOT_EXISTS);
-		const viewCount = findPost.viewCount + 1;
-		const result = await this.postRepository.save({ ...findPost, viewCount });
+	async getPost(post: Post): Promise<Post> {
+		const viewCount = post.viewCount + 1;
+		const result = await this.postRepository.save({ ...post, viewCount });
 		return result;
 	}
 
