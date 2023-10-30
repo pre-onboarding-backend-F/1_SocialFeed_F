@@ -4,16 +4,19 @@ import { Response } from 'express';
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
 	catch(exception: HttpException, host: ArgumentsHost) {
-		const response = host.switchToHttp().getResponse<Response>();
+		const ctx = host.switchToHttp();
+		const response = ctx.getResponse<Response>();
+		const request = ctx.getRequest<Request>();
 		const status = exception.getStatus();
 		const exceptionObj = exception.getResponse(); // ExceptionObj 타입의 객체
 
 		response.status(status).json({
 			success: false,
-			message: exceptionObj['message'],
-			status,
+			statusCode: status,
 			error: exceptionObj['error'],
-			date: new Date().toISOString(), // 2023-10-27T14:30:20.123Z
+			message: exceptionObj['message'],
+			timestamp: new Date().toISOString(), // 2023-10-27T14:30:20.123Z
+			path: request.url,
 		});
 	}
 }

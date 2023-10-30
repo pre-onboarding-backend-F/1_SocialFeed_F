@@ -4,8 +4,12 @@ import { IsNotEmpty, IsNumberString, MaxLength, MinLength } from 'class-validato
 
 export class ApproveUserDto extends OmitType(CreateUserDto, ['email'] as const) {
 	@IsNumberString()
-	@MinLength(6)
-	@MaxLength(6)
+	@MinLength(6, {
+		message: '가입승인코드는 6자리입니다.',
+	})
+	@MaxLength(6, {
+		message: '가입승인코드는 6자리입니다.',
+	})
 	@IsNotEmpty()
 	signupCode: string;
 }
