@@ -44,7 +44,7 @@ export class PostController {
 	async like(@GetPost() post: PostType) {
 		return await this.postService.like(post);
 	}
-	가;
+
 	@Patch('share/:postId')
 	@UseGuards(AtGuard, PostGuard)
 	@ResponseMessage(PostResponseMessage.SHARE)
