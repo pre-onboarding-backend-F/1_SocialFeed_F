@@ -3,11 +3,14 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Repository, Brackets, SelectQueryBuilder } from 'typeorm';
 import { Post } from './entities/post.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PostsException, StatsException } from '../commons/exception.message';
+import { PostsException } from '../commons/exception.message';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostsQueryDto } from './dto/query-post.dto';
 import { orderMappings } from 'src/commons/enums/order-role.enum';
 import { SearchRole } from 'src/commons/enums/search-role.enum';
+import { StatsQueryDto } from './dto/stats-query.dto';
+import { StasticsType } from 'src/commons/enums/stastics-type.enum';
+import { stasticsValueType } from 'src/commons/enums/stastics-value-type.enum';
 
 @Injectable()
 export class PostService {
@@ -53,38 +56,101 @@ export class PostService {
 		return result;
 	}
 
-	async getStats(statsQueryDto) {
-		if (!statsQueryDto.value) statsQueryDto.value = 'COUNT';
-		if (!statsQueryDto.end) statsQueryDto.end = new Date().toISOString();
-		if (!statsQueryDto.start) {
-			const sevenDaysAgo = new Date();
-			sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-			statsQueryDto.start = sevenDaysAgo.toISOString();
+	async getStats(statsQueryDto: StatsQueryDto, user: User) {
+		const { value, type, start, end, hashtag } = statsQueryDto;
+		const qb = this.postRepository.createQueryBuilder('post');
+
+		if (type == StasticsType.DATE) {
+			if (value == stasticsValueType.COUNT) {
+				qb.select(['DATE_FORMAT(post.createdAt, "%Y-%m-%d") as date', 'COUNT(*) as count']);
+				qb.where('post.createdAt >= :start AND post.createdAt <= :end', { start, end });
+
+				if (hashtag) qb.andWhere('JSON_CONTAINS(post.hashtags, JSON_QUOTE(:hashtag)) = 1', { hashtag });
+				else
+					qb.andWhere('JSON_CONTAINS(post.hashtags, JSON_QUOTE(:hashtag)) = 1', {
+						hashtag: user.account,
+					});
+
+				qb.groupBy('date');
+
+				const result = await qb.getRawMany();
+
+				const stats = result.reduce((acc, item) => {
+					acc[item.date] = parseInt(item.count);
+					return acc;
+				}, {});
+
+				return stats;
+			} else {
+				qb.select(['DATE_FORMAT(post.createdAt, "%Y-%m-%d") as date', `SUM(${value}) as count`]);
+				qb.where('post.createdAt >= :start AND post.createdAt <= :end', { start, end });
+
+				if (hashtag) qb.andWhere('JSON_CONTAINS(post.hashtags, JSON_QUOTE(:hashtag)) = 1', { hashtag });
+				else
+					qb.andWhere('JSON_CONTAINS(post.hashtags, JSON_QUOTE(:hashtag)) = 1', {
+						hashtag: user.account,
+					});
+
+				qb.groupBy('date');
+
+				const result = await qb.getRawMany();
+
+				const stats = result.reduce((acc, item) => {
+					acc[item.date] = parseInt(item.count);
+					return acc;
+				}, {});
+
+				return stats;
+			}
 		}
-		const svenDays = 7 * 24 * 60 * 60 * 1000;
 
-		if (new Date(statsQueryDto.end).getTime() - new Date(statsQueryDto.start).getTime() > svenDays)
-			throw new BadRequestException(StatsException.STATS_MAX_SEVEN_DAY);
+		if (type == StasticsType.HOUR) {
+			if (value == stasticsValueType.COUNT) {
+				qb.select('DATE_FORMAT(post.createdAt, "%Y-%m-%d %H:%i") AS date, COUNT(*) AS count');
+				qb.where('post.createdAt >= :start AND post.createdAt <= :end', { start, end });
 
-		const qb = this.postRepository.createQueryBuilder('post').select('DATE(post.createdAt');
+				if (hashtag) {
+					qb.andWhere('JSON_CONTAINS(post.hashtags, JSON_QUOTE(:hashtag)) = 1', { hashtag });
+				} else {
+					qb.andWhere('JSON_CONTAINS(post.hashtags, JSON_QUOTE(:hashtag)) = 1', {
+						hashtag: user.account,
+					});
+				}
 
-		if (statsQueryDto.value === 'count') {
-			//qb.addSelect('COUNT(post.id)', 'sum');
-		} else if (statsQueryDto.value === 'view_count') {
-			qb.addSelect('COUNT(viewCount)', 'sum');
-		} else if (statsQueryDto.value === 'like_count') {
-			qb.addSelect('COUNT(likeCount)', 'sum');
-		} else if (statsQueryDto.value === 'share_count') {
-			qb.addSelect('COUNT(shareCount)', 'sum');
+				qb.groupBy('date');
+
+				const result = await qb.getRawMany();
+
+				const stats = result.reduce((acc, item) => {
+					acc[item.date] = parseInt(item.count);
+					return acc;
+				}, {});
+
+				return stats;
+			} else {
+				qb.select(`DATE_FORMAT(post.createdAt, "%Y-%m-%d %H:%i") AS date, SUM(${value}) AS count`);
+				qb.where('post.createdAt >= :start AND post.createdAt <= :end', { start, end });
+
+				if (hashtag) {
+					qb.andWhere('JSON_CONTAINS(post.hashtags, JSON_QUOTE(:hashtag)) = 1', { hashtag });
+				} else {
+					qb.andWhere('JSON_CONTAINS(post.hashtags, JSON_QUOTE(:hashtag)) = 1', {
+						hashtag: user.account,
+					});
+				}
+
+				qb.groupBy('date');
+
+				const result = await qb.getRawMany();
+
+				const stats = result.reduce((acc, item) => {
+					acc[item.date] = parseInt(item.count);
+					return acc;
+				}, {});
+
+				return stats;
+			}
 		}
-
-		const result = await qb
-			.andWhere('DATE(post.createdAt) BETWEEN (:start, INTERVAL 1 DAY) AND :end', {
-				start: statsQueryDto.start,
-				end: statsQueryDto.end,
-			})
-			.groupBy('DATE(post.createdAt)')
-			.getRawMany();
 	}
 
 	async like(post: Post) {
