@@ -30,7 +30,7 @@ export class UserService {
 		if (isExist) {
 			const user = await this.findOne({ account });
 
-			if (!user.isCertify) throw new BadRequestException('회원 가입 승인이 되지 않은 계정입니다.');
+			if (!user.isCertify) throw new BadRequestException(UsersException.USER_NOT_CERTIFIED);
 
 			const isMatched = await bcrypt.compare(password, user.password);
 
@@ -46,10 +46,10 @@ export class UserService {
 				};
 			}
 
-			throw new BadRequestException('패스워드가 일치하지 않습니다.');
+			throw new BadRequestException(UsersException.USER_PASSWORD_NOT_MATCHED);
 		}
 
-		throw new BadRequestException('존재하지 않는 계정입니다.');
+		throw new BadRequestException(UsersException.USER_NOT_EXISTS);
 	}
 
 	async refresh(user: User) {
