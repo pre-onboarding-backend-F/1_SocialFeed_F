@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards, Query, Request, UseFilters, Patch } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards, Query, UseFilters, Patch } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { AtGuard } from 'src/commons/guards/access.token.guard';
@@ -43,12 +43,12 @@ export class PostController {
 		return await this.postService.like(post);
 	}
 
-  @Get()
-  @UseGuards(AtGuard)
-  @ResponseMessage(PostResponseMessage.FIND_POSTS)
-  async findPosts(@GetUser() user: User, @Query() query: PostsQueryDto) {
-      return this.postService.findPosts(query, user.account);
-  }
+	@Get()
+	@UseGuards(AtGuard)
+	@ResponseMessage(PostResponseMessage.FIND_POSTS)
+	async findPosts(@GetUser() user: User, @Query() query: PostsQueryDto) {
+		return this.postService.findPosts(query, user.account);
+	}
 
 	@Patch('share/:postId')
 	@UseGuards(AtGuard, PostGuard)
