@@ -15,10 +15,13 @@ export default class MainSeeder implements Seeder {
 			Array(50)
 				.fill('')
 				.map(async () => {
-					const post = await postsFactory.make({
-						user: faker.helpers.arrayElement(users),
+					const fakeUser = faker.helpers.arrayElement(users);
+					const fakeHashTags = [`${fakeUser.account}`];
+					fakeHashTags.push(...faker.helpers.arrayElements(['맛집', '성수동', '신림동', '분위기좋음']));
+					return await postsFactory.make({
+						hashtags: fakeHashTags,
+						user: fakeUser,
 					});
-					return post;
 				}),
 		);
 		await postsRepository.save(posts);
