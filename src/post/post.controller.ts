@@ -32,7 +32,7 @@ export class PostController {
 	}
 
 	@Get('/:postId')
-	@UseGuards(AtGuard, PostGuard)
+	@UseGuards(PostGuard)
 	@ResponseMessage(PostResponseMessage.GET_POST)
 	async getPost(@GetPost() post: PostType) {
 		return await this.postService.getPost(post);
