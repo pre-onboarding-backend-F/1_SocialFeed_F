@@ -32,7 +32,7 @@ export class PostController {
 	}
 
 	@Get('/:postId')
-	@UseGuards(PostGuard)
+	@UseGuards(AtGuard, PostGuard)
 	@ResponseMessage(PostResponseMessage.GET_POST)
 	async getPost(@GetPost() post: PostType) {
 		return await this.postService.getPost(post);
@@ -44,7 +44,7 @@ export class PostController {
 	async like(@GetPost() post: PostType) {
 		return await this.postService.like(post);
 	}
-
+	가;
 	@Patch('share/:postId')
 	@UseGuards(AtGuard, PostGuard)
 	@ResponseMessage(PostResponseMessage.SHARE)
