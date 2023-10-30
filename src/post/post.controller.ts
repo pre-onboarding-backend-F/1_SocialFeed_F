@@ -11,6 +11,7 @@ import { GetPost } from 'src/commons/decorators/get.post.decorator';
 import { Post as PostType } from './entities/post.entity';
 import { PostsQueryDto } from './dto/query-post.dto';
 import { HttpExceptionFilter } from 'src/commons/filter/http-exception.filter';
+import { StatsQueryDto } from './dto/stats-query.dto';
 
 @Controller('posts')
 @UseFilters(HttpExceptionFilter)
@@ -22,6 +23,13 @@ export class PostController {
 	@ResponseMessage(PostResponseMessage.CREATE_POST)
 	async createPost(@GetUser() user: User, @Body() createPostDto: CreatePostDto) {
 		return await this.postService.createPost(user, createPostDto);
+	}
+
+	@Get('/stastics')
+	@UseGuards(AtGuard)
+	@ResponseMessage(PostResponseMessage.STASTICS)
+	async getStats(@Query() statsQueryDto: StatsQueryDto, @GetUser() user: User) {
+		return await this.postService.getStats(statsQueryDto, user);
 	}
 
 	@Get('/:postId')
