@@ -208,9 +208,10 @@ export class PostService {
 	}
 
 	async findPosts(query: PostsQueryDto, account: string) {
-		const { type, hashtag, orderBy, order, search, searchBy, page } = query;
+		const { type, hashtag, orderBy, order, search, searchBy } = query;
 
-		let { pageCount } = query;
+		let { page, pageCount } = query;
+		page = page || 0;
 		pageCount = pageCount || 10;
 
 		const qb = this.postRepository.createQueryBuilder('post');
