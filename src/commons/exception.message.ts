@@ -26,6 +26,10 @@ export class UsersException {
 		message: '인증코드가 일치하지 않습니다.',
 		error: ExceptionObjError.BAD_REQUEST,
 	};
+	static USER_NOT_CERTIFIED: ExceptionObj = {
+		message: '회원 가입 승인이 되지 않은 계정입니다.',
+		error: ExceptionObjError.BAD_REQUEST,
+	};
 }
 
 export class PostsException {
