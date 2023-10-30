@@ -25,19 +25,18 @@ export class DateRangeValidator implements ValidatorConstraintInterface {
 	}
 
 	defaultMessage(args?: ValidationArguments): string {
-		console.log('args.constraints :>> ', args.constraints);
-		return `오늘 날짜 이전부터 최대 ${args.constraints[0].dueDay}일 내의 날짜만 조회 가능합니다.`;
+		return `$property은(는) 오늘 날짜 이전부터 최대 ${args.constraints[0].dueDay}일 내의 날짜만 조회 가능합니다.`;
 	}
 }
 
-interface DateExpiryOptions {
+export interface DueDateOptions {
 	dueDay: number;
 }
 
-export function IsDueDate(options: DateExpiryOptions, validationOptions?: ValidationOptions) {
+export function IsDueDate(options: DueDateOptions, validationOptions?: ValidationOptions) {
 	return function (object: Record<string, any>, propertyName: string) {
 		registerDecorator({
-			name: 'isExpiryDate',
+			name: 'IsDueDate',
 			target: object.constructor,
 			propertyName: propertyName,
 			constraints: [options],
