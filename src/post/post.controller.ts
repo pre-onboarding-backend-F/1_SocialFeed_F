@@ -43,17 +43,17 @@ export class PostController {
 		return await this.postService.like(post);
 	}
 
+  @Get()
+  @UseGuards(AtGuard)
+  @ResponseMessage(PostResponseMessage.FIND_POSTS)
+  async findPosts(@GetUser() user: User, @Query() query: PostsQueryDto) {
+      return this.postService.findPosts(query, user.account);
+  }
+
 	@Patch('share/:postId')
 	@UseGuards(AtGuard, PostGuard)
 	@ResponseMessage(PostResponseMessage.SHARE)
 	async share(@GetPost() post: PostType) {
 		return await this.postService.share(post);
-	}
-
-	@Get()
-	@UseGuards(AtGuard)
-	@ResponseMessage(PostResponseMessage.FIND_POSTS)
-	async findPosts(@Query() query: PostsQueryDto, @Request() req) {
-		return this.postService.findPosts(query, req.user.account);
 	}
 }
