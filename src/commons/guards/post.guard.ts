@@ -14,7 +14,8 @@ export class PostGuard implements CanActivate {
 
 	async canActivate(context: ExecutionContext) {
 		const request: PostRequest = context.switchToHttp().getRequest();
-		const postId = request.path.split('/')[3];
+		const pathSplit = request.path.split('/');
+		const postId = pathSplit[pathSplit.length - 1];
 
 		const post = await this.postService.findOne(postId);
 
