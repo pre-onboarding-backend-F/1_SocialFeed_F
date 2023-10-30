@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards, Query, UseFilters, Patch } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards, Query, UseFilters, Patch } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { AtGuard } from 'src/commons/guards/access.token.guard';
