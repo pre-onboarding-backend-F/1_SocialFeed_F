@@ -5,7 +5,7 @@ import { Post } from './entities/post.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostsQueryDto } from './dto/query-post.dto';
-import { orderMappings } from 'src/commons/enums/order-role.enum';
+import { OrderRole, orderMappings } from 'src/commons/enums/order-role.enum';
 import { SearchRole } from 'src/commons/enums/search-role.enum';
 import { StatsQueryDto } from './dto/stats-query.dto';
 import { StasticsType } from 'src/commons/enums/stastics-type.enum';
@@ -166,29 +166,27 @@ export class PostService {
 		return posts;
 	}
 
-	async findPosts(query: PostsQueryDto, account: string) {
-		const { type, hashtag, orderBy, order, search, searchBy, page } = query;
-
-		let { pageCount } = query;
-		pageCount = pageCount || 10;
-
-		const qb = this.postRepository.createQueryBuilder('post');
-
-		if (type) qb.where('post.type = :type', { type });
-
+	addHashtag(qb: SelectQueryBuilder<Post>, hashtag: string, account: string) {
 		if (hashtag) {
 			const jsonHashtag = JSON.stringify(hashtag);
 			qb.where('JSON_CONTAINS(post.hashtags, :hashtag) = 1', { hashtag: jsonHashtag });
 		} else {
 			qb.andWhere('JSON_CONTAINS(post.hashtags, JSON_QUOTE(:hashtag)) = 1', { hashtag: account });
 		}
+	}
 
-		if (orderMappings[orderBy]) {
-			qb.orderBy(`post.${orderMappings[orderBy]}`, order === 'asc' ? 'ASC' : 'DESC');
-		}
+	addOrder(qb: SelectQueryBuilder<Post>, orderBy: OrderRole, order: 'asc' | 'desc') {
+		const orderColumn = orderMappings[orderBy];
+		if (orderColumn) qb.orderBy(`post.${orderColumn}`, order === 'asc' ? 'ASC' : 'DESC');
+	}
 
+	addType(qb: SelectQueryBuilder<Post>, type: string) {
+		if (type) qb.andWhere('post.type = :type', { type: type });
+	}
+
+	addSearch(qb: SelectQueryBuilder<Post>, searchBy: SearchRole, search: string) {
 		if (search) {
-			if (searchBy === SearchRole.titleContent) {
+			if (!searchBy || searchBy === SearchRole.titleContent) {
 				qb.andWhere(
 					new Brackets((subQuery) => {
 						subQuery
@@ -200,6 +198,20 @@ export class PostService {
 				qb.andWhere(`post.${SearchRole[searchBy]} LIKE :search`, { search: `%${search}%` });
 			}
 		}
+	}
+
+	async findPosts(query: PostsQueryDto, account: string) {
+		const { type, hashtag, orderBy, order, search, searchBy, page } = query;
+
+		let { pageCount } = query;
+		pageCount = pageCount || 10;
+
+		const qb = this.postRepository.createQueryBuilder('post');
+
+		this.addHashtag(qb, hashtag, account);
+		this.addOrder(qb, orderBy, order);
+		this.addType(qb, type);
+		this.addSearch(qb, searchBy, search);
 
 		const posts = await this.paginateQuery(qb, page, pageCount);
 

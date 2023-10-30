@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards, Query, UseFilters, Patch } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards, Query, UseFilters, Patch } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { AtGuard } from 'src/commons/guards/access.token.guard';
@@ -6,12 +6,12 @@ import { User } from 'src/user/entities/user.entity';
 import { GetUser } from 'src/commons/decorators/get.user.decorator';
 import { ResponseMessage } from 'src/commons/decorators/response.key.decorator';
 import { PostResponseMessage } from 'src/commons/class/post.response.message';
-import { StatsQueryDto } from './dto/stats-query.dto';
 import { PostGuard } from 'src/commons/guards/post.guard';
 import { GetPost } from 'src/commons/decorators/get.post.decorator';
 import { Post as PostType } from './entities/post.entity';
 import { PostsQueryDto } from './dto/query-post.dto';
 import { HttpExceptionFilter } from 'src/commons/filter/http-exception.filter';
+import { StatsQueryDto } from './dto/stats-query.dto';
 
 @Controller('posts')
 @UseFilters(HttpExceptionFilter)
@@ -46,17 +46,17 @@ export class PostController {
 		return await this.postService.like(post);
 	}
 
-	@Get()
-	@UseGuards(AtGuard)
-	@ResponseMessage(PostResponseMessage.FIND_POSTS)
-	async findPosts(@GetUser() user: User, @Query() query: PostsQueryDto) {
-		return this.postService.findPosts(query, user.account);
-	}
-
 	@Patch('share/:postId')
 	@UseGuards(AtGuard, PostGuard)
 	@ResponseMessage(PostResponseMessage.SHARE)
 	async share(@GetPost() post: PostType) {
 		return await this.postService.share(post);
+	}
+
+	@Get()
+	@UseGuards(AtGuard)
+	@ResponseMessage(PostResponseMessage.FIND_POSTS)
+	async findPosts(@Query() query: PostsQueryDto, @GetUser() user: User) {
+		return this.postService.findPosts(query, user.account);
 	}
 }
