@@ -32,8 +32,10 @@ export class PostController {
 	}
 
 	@Get('/:postId')
-	async getPost(@Param('postId') postId: string) {
-		return await this.postService.getPost(postId);
+	@UseGuards(PostGuard)
+	@ResponseMessage(PostResponseMessage.GET_POST)
+	async getPost(@GetPost() post: PostType) {
+		return await this.postService.getPost(post);
 	}
 
 	@Patch('like/:postId')
