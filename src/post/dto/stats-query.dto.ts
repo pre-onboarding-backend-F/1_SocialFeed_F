@@ -11,12 +11,14 @@ export class StatsQueryDto {
 	@IsEnum(StasticsType)
 	type: StasticsType.DATE | StasticsType.HOUR;
 
+	@IsOptional()
 	@IsDateString()
 	@IsDueDate({ dueDay: 7 })
-	start: string;
+	start: string | Date;
 
+	@IsOptional()
 	@IsDateString()
-	end: string;
+	end: string | Date;
 
 	@IsEnum(stasticsValueType)
 	value:

@@ -56,8 +56,15 @@ export class PostService {
 	}
 
 	async getStats(statsQueryDto: StatsQueryDto, user: User) {
-		const { value, type, start, end, hashtag } = statsQueryDto;
+		const { value, type, hashtag } = statsQueryDto;
+		let { start, end } = statsQueryDto;
 		const qb = this.postRepository.createQueryBuilder('post');
+
+		if (!(start && end)) {
+			start = new Date();
+			start.setDate(start.getDate() - 7);
+			end = new Date();
+		}
 
 		if (type == StasticsType.DATE) {
 			if (value == stasticsValueType.COUNT) {
