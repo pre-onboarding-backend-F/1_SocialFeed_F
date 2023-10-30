@@ -3,4 +3,5 @@ export class PostResponseMessage {
 	static LIKE = '좋아요 성공';
 	static SHARE = '공유 성공';
 	static FIND_POSTS = '조회 성공';
+	static STASTICS = '통계 조회 성공';
 }

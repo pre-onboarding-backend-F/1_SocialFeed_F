@@ -25,10 +25,11 @@ export class PostController {
 		return await this.postService.createPost(user, createPostDto);
 	}
 
-	@Get('/stats')
-	async getStats(@Query() statsQueryDto: StatsQueryDto) {
-		console.log(statsQueryDto);
-		return await this.postService.getStats(statsQueryDto);
+	@Get('/stastics')
+	@UseGuards(AtGuard)
+	@ResponseMessage(PostResponseMessage.STASTICS)
+	async getStats(@Query() statsQueryDto: StatsQueryDto, @GetUser() user: User) {
+		return await this.postService.getStats(statsQueryDto, user);
 	}
 
 	@Get('/:postId')
