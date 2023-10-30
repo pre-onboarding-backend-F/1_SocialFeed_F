@@ -8,9 +8,9 @@ import { AtStrategy } from 'src/commons/strategy/access.token.strategy';
 import { RtStrategy } from 'src/commons/strategy/refresh.token.strategy';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([User]), JwtModule],
-    controllers: [UserController],
-    providers: [UserService, AtStrategy, RtStrategy],
-    exports: [UserService],
+	imports: [TypeOrmModule.forFeature([User]), JwtModule],
+	controllers: [UserController],
+	providers: [UserService, AtStrategy, RtStrategy],
+	exports: [UserService],
 })
 export class UserModule {}

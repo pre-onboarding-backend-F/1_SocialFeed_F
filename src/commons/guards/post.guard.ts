@@ -5,22 +5,22 @@ import { PostService } from 'src/post/post.service';
 import { PostsException } from '../exception.message';
 
 interface PostRequest extends Request {
-    post: Post;
+	post: Post;
 }
 
 @Injectable()
 export class PostGuard implements CanActivate {
-    constructor(private readonly postService: PostService) {}
+	constructor(private readonly postService: PostService) {}
 
-    async canActivate(context: ExecutionContext) {
-        const request: PostRequest = context.switchToHttp().getRequest();
-        const postId = request.path.split('/')[3];
+	async canActivate(context: ExecutionContext) {
+		const request: PostRequest = context.switchToHttp().getRequest();
+		const postId = request.path.split('/')[3];
 
-        const post = await this.postService.findOne(postId);
+		const post = await this.postService.findOne(postId);
 
-        if (!post) throw new BadRequestException(PostsException.POST_NOT_EXISTS);
+		if (!post) throw new BadRequestException(PostsException.POST_NOT_EXISTS);
 
-        request.post = post;
-        return true;
-    }
+		request.post = post;
+		return true;
+	}
 }

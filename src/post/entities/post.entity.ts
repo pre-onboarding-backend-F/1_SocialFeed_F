@@ -5,27 +5,27 @@ import { BaseEntity } from '../../commons/base.entity';
 
 @Entity()
 export class Post extends BaseEntity {
-    @Column({ type: 'enum', enum: SnsProvider })
-    type: SnsProvider;
+	@Column({ type: 'enum', enum: SnsProvider })
+	type: SnsProvider;
 
-    @Column()
-    title: string;
+	@Column()
+	title: string;
 
-    @Column()
-    content: string;
+	@Column()
+	content: string;
 
-    @Column({ type: 'json' })
-    hashtags: string[];
+	@Column({ type: 'json' })
+	hashtags: string[];
 
-    @Column({ default: 0 })
-    viewCount: number;
+	@Column({ default: 0 })
+	viewCount: number;
 
-    @Column({ default: 0 })
-    likeCount: number;
+	@Column({ default: 0 })
+	likeCount: number;
 
-    @Column({ default: 0 })
-    shareCount: number;
+	@Column({ default: 0 })
+	shareCount: number;
 
-    @ManyToOne(() => User)
-    user: User;
+	@ManyToOne(() => User)
+	user: User;
 }

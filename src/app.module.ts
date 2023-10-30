@@ -8,18 +8,18 @@ import jwtConfiguration from './commons/configs/jwt.configuration';
 import { JwtModule } from './jwt/jwt.module';
 
 @Module({
-    imports: [
-        ConfigModule.forRoot({
-            isGlobal: true,
-            cache: true,
-            load: [jwtConfiguration],
-            envFilePath: `.${process.env.NODE_ENV}.env`,
-            validationSchema,
-        }),
-        DatabaseModule,
-        UserModule,
-        PostModule,
-        JwtModule,
-    ],
+	imports: [
+		ConfigModule.forRoot({
+			isGlobal: true,
+			cache: true,
+			load: [jwtConfiguration],
+			envFilePath: `.${process.env.NODE_ENV}.env`,
+			validationSchema,
+		}),
+		DatabaseModule,
+		UserModule,
+		PostModule,
+		JwtModule,
+	],
 })
 export class AppModule {}

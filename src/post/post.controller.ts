@@ -6,6 +6,7 @@ import { User } from 'src/user/entities/user.entity';
 import { GetUser } from 'src/commons/decorators/get.user.decorator';
 import { ResponseMessage } from 'src/commons/decorators/response.key.decorator';
 import { PostResponseMessage } from 'src/commons/class/post.response.message';
+import { StatsQueryDto } from './dto/stats-query.dto';
 import { PostGuard } from 'src/commons/guards/post.guard';
 import { GetPost } from 'src/commons/decorators/get.post.decorator';
 import { Post as PostType } from './entities/post.entity';
@@ -15,38 +16,44 @@ import { HttpExceptionFilter } from 'src/commons/filter/http-exception.filter';
 @Controller('posts')
 @UseFilters(HttpExceptionFilter)
 export class PostController {
-    constructor(private readonly postService: PostService) {}
+	constructor(private readonly postService: PostService) {}
 
-    @Post()
-    @UseGuards(AtGuard)
-    @ResponseMessage(PostResponseMessage.CREATE_POST)
-    async createPost(@GetUser() user: User, @Body() createPostDto: CreatePostDto) {
-        return await this.postService.createPost(user, createPostDto);
-    }
+	@Post()
+	@UseGuards(AtGuard)
+	@ResponseMessage(PostResponseMessage.CREATE_POST)
+	async createPost(@GetUser() user: User, @Body() createPostDto: CreatePostDto) {
+		return await this.postService.createPost(user, createPostDto);
+	}
 
-    @Get('/:postId')
-    async getPost(@Param('postId') postId: string) {
-        return await this.postService.getPost(postId);
-    }
+	@Get('/stats')
+	async getStats(@Query() statsQueryDto: StatsQueryDto) {
+		console.log(statsQueryDto);
+		return await this.postService.getStats(statsQueryDto);
+	}
 
-    @Patch('like/:postId')
-    @UseGuards(AtGuard, PostGuard)
-    @ResponseMessage(PostResponseMessage.LIKE)
-    async like(@GetPost() post: PostType) {
-        return await this.postService.like(post);
-    }
+	@Get('/:postId')
+	async getPost(@Param('postId') postId: string) {
+		return await this.postService.getPost(postId);
+	}
 
-    @Patch('share/:postId')
-    @UseGuards(AtGuard, PostGuard)
-    @ResponseMessage(PostResponseMessage.SHARE)
-    async share(@GetPost() post: PostType) {
-        return await this.postService.share(post);
-    }
+	@Patch('like/:postId')
+	@UseGuards(AtGuard, PostGuard)
+	@ResponseMessage(PostResponseMessage.LIKE)
+	async like(@GetPost() post: PostType) {
+		return await this.postService.like(post);
+	}
 
-    @Get()
-    @UseGuards(AtGuard)
-    @ResponseMessage(PostResponseMessage.FIND_POSTS)
-    async findPosts(@GetUser() user: User, @Query() query: PostsQueryDto) {
-        return this.postService.findPosts(query, user.account);
-    }
+  @Get()
+  @UseGuards(AtGuard)
+  @ResponseMessage(PostResponseMessage.FIND_POSTS)
+  async findPosts(@GetUser() user: User, @Query() query: PostsQueryDto) {
+      return this.postService.findPosts(query, user.account);
+  }
+
+	@Patch('share/:postId')
+	@UseGuards(AtGuard, PostGuard)
+	@ResponseMessage(PostResponseMessage.SHARE)
+	async share(@GetPost() post: PostType) {
+		return await this.postService.share(post);
+	}
 }

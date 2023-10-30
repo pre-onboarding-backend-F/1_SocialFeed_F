@@ -1,3 +1,3 @@
 export enum ExceptionObjError {
-    BAD_REQUEST = 'Bad Request',
+	BAD_REQUEST = 'Bad Request',
 }
