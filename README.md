@@ -11,6 +11,7 @@
 -   [프로젝트 진행 및 이슈 관리](#프로젝트-진행-및-이슈-관리)
 -   [구현과정(설계 및 의도)](#구현과정설계-및-의도)
 -   [TIL](#til)
+-   [팀원](#팀원)
 
 ## 개요
 
@@ -38,515 +39,57 @@ npm run start:docker
 
 ## API 명세
 
-TODO: 작성 필요
+API 명세를 작성한 노션 페이지 링크입니다.
 
-### 유저 API
-
-<details>
-<summary>회원가입</summary>
-
-#### Request
-
-##### endpoint
-
-```
-POST /users;
-```
-
-##### Body
-
-```
-{
-	"account": "사용자 계정",
-	"password": "사용자 비밀번호",
-	"email": "사용자 이메일"
-}
-```
-
-#### Response
-
-##### Success
-
-```http
-HTTP/1.1 200
-Content-Type: application/json
-
-[{
-    "id": 10,
-    "name": "shirt",
-    "color": "red",
-    "price": "$23"
-},...
-]
-```
-
-##### Fail
-
-```http
-HTTP/1.1 200
-Content-Type: application/json
-
-[{
-    "id": 10,
-    "name": "shirt",
-    "color": "red",
-    "price": "$23"
-},...
-]
-```
-
-</details>
-
-<details>
-<summary>가입승인</summary>
-
-#### Request
-
-##### endpoint
-
-```
-POST /users/approve;
-```
-
-##### Body
-
-```
-{
-	"account": "사용자 계정",
-	"password": "사용자 비밀번호",
-	"email": "사용자 이메일"
-}
-```
-
-#### Response
-
-##### Success
-
-```http
-HTTP/1.1 200
-Content-Type: application/json
-
-[{
-    "id": 10,
-    "name": "shirt",
-    "color": "red",
-    "price": "$23"
-},...
-]
-```
-
-##### Fail
-
-```http
-HTTP/1.1 200
-Content-Type: application/json
-
-[{
-    "id": 10,
-    "name": "shirt",
-    "color": "red",
-    "price": "$23"
-},...
-]
-```
-
-</details>
-
-<details>
-<summary>로그인</summary>
-
-#### Request
-
-##### endpoint
-
-```
-POST /users/signin;
-```
-
-##### Body
-
-```
-{
-	"account": "사용자 계정",
-	"password": "사용자 비밀번호",
-	"email": "사용자 이메일"
-}
-```
-
-#### Response
-
-##### Success
-
-```http
-HTTP/1.1 200
-Content-Type: application/json
-
-[{
-    "id": 10,
-    "name": "shirt",
-    "color": "red",
-    "price": "$23"
-},...
-]
-```
-
-##### Fail
-
-```http
-HTTP/1.1 200
-Content-Type: application/json
-
-[{
-    "id": 10,
-    "name": "shirt",
-    "color": "red",
-    "price": "$23"
-},...
-]
-```
-
-</details>
-
-### 게시글 API
-
-<details>
-<summary>게시글 생성</summary>
-
-#### Request
-
-##### endpoint
-
-```
-POST /posts;
-```
-
-##### Body
-
-```
-{
-	"account": "사용자 계정",
-	"password": "사용자 비밀번호",
-	"email": "사용자 이메일"
-}
-```
-
-#### Response
-
-##### Success
-
-```http
-HTTP/1.1 200
-Content-Type: application/json
-
-[{
-    "id": 10,
-    "name": "shirt",
-    "color": "red",
-    "price": "$23"
-},...
-]
-```
-
-##### Fail
-
-```http
-HTTP/1.1 200
-Content-Type: application/json
-
-[{
-    "id": 10,
-    "name": "shirt",
-    "color": "red",
-    "price": "$23"
-},...
-]
-```
-
-</details>
-
-<details>
-<summary>게시글 목록 조회</summary>
-
-#### Request
-
-##### endpoint
-
-```
-GET /posts;
-```
-
-##### Body
-
-```
-{
-	"account": "사용자 계정",
-	"password": "사용자 비밀번호",
-	"email": "사용자 이메일"
-}
-```
-
-#### Response
-
-##### Success
-
-```http
-HTTP/1.1 200
-Content-Type: application/json
-
-[{
-    "id": 10,
-    "name": "shirt",
-    "color": "red",
-    "price": "$23"
-},...
-]
-```
-
-##### Fail
-
-```http
-HTTP/1.1 200
-Content-Type: application/json
-
-[{
-    "id": 10,
-    "name": "shirt",
-    "color": "red",
-    "price": "$23"
-},...
-]
-```
-
-</details>
-
-<details>
-<summary>게시글 상세 조회</summary>
-
-#### Request
-
-##### endpoint
-
-```
-GET /posts;
-```
-
-##### Body
-
-```
-{
-	"account": "사용자 계정",
-	"password": "사용자 비밀번호",
-	"email": "사용자 이메일"
-}
-```
-
-#### Response
-
-##### Success
-
-```http
-HTTP/1.1 200
-Content-Type: application/json
-
-[{
-    "id": 10,
-    "name": "shirt",
-    "color": "red",
-    "price": "$23"
-},...
-]
-```
-
-##### Fail
-
-```http
-HTTP/1.1 200
-Content-Type: application/json
-
-[{
-    "id": 10,
-    "name": "shirt",
-    "color": "red",
-    "price": "$23"
-},...
-]
-```
-
-</details>
-
-<details>
-<summary>게시글 통계</summary>
-
-#### Request
-
-##### endpoint
-
-```
-GET /posts/statistics;
-```
-
-##### Body
-
-```
-{
-	"account": "사용자 계정",
-	"password": "사용자 비밀번호",
-	"email": "사용자 이메일"
-}
-```
-
-#### Response
-
-##### Success
-
-```http
-HTTP/1.1 200
-Content-Type: application/json
-
-[{
-    "id": 10,
-    "name": "shirt",
-    "color": "red",
-    "price": "$23"
-},...
-]
-```
-
-##### Fail
-
-```http
-HTTP/1.1 200
-Content-Type: application/json
-
-[{
-    "id": 10,
-    "name": "shirt",
-    "color": "red",
-    "price": "$23"
-},...
-]
-```
-
-</details>
-
-<details>
-<summary>게시글 좋아요</summary>
-
-#### Request
-
-##### endpoint
-
-```
-PATCH /posts/likes;
-```
-
-##### Body
-
-```
-{
-	"account": "사용자 계정",
-	"password": "사용자 비밀번호",
-	"email": "사용자 이메일"
-}
-```
-
-#### Response
-
-##### Success
-
-```http
-HTTP/1.1 200
-Content-Type: application/json
-
-[{
-    "id": 10,
-    "name": "shirt",
-    "color": "red",
-    "price": "$23"
-},...
-]
-```
-
-##### Fail
-
-```http
-HTTP/1.1 200
-Content-Type: application/json
-
-[{
-    "id": 10,
-    "name": "shirt",
-    "color": "red",
-    "price": "$23"
-},...
-]
-```
-
-</details>
-
-<details>
-<summary>게시글 공유</summary>
-
-#### Request
-
-##### endpoint
-
-```
-PATCH /posts/share;
-```
-
-##### Body
-
-```
-{
-	"account": "사용자 계정",
-	"password": "사용자 비밀번호",
-	"email": "사용자 이메일"
-}
-```
-
-#### Response
-
-##### Success
-
-```http
-HTTP/1.1 200
-Content-Type: application/json
-
-[{
-    "id": 10,
-    "name": "shirt",
-    "color": "red",
-    "price": "$23"
-},...
-]
-```
-
-##### Fail
-
-```http
-HTTP/1.1 200
-Content-Type: application/json
-
-[{
-    "id": 10,
-    "name": "shirt",
-    "color": "red",
-    "price": "$23"
-},...
-]
-```
-
-</details>
+[![Notion](https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-badge&logo=notion&logoColor=white)](https://www.notion.so/API-2c91aa8513504173aca4997cc1abcdd2?pvs=4)🔗</br>
 
 ## 프로젝트 진행 및 이슈 관리
 
-[![Notion](https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-badge&logo=notion&logoColor=white)](https://www.notion.so/1_SocialFeed_F-07ec7e373d874d2e8c693c76720e99f1?pvs=4)</br>
+프로젝트 진행 및 이슈 관리를 작성한 타임보드 노션 페이지 링크입니다.
+
+[![Notion](https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-badge&logo=notion&logoColor=white)](https://www.notion.so/22e476d775c34931905f1155d33945ff?v=4ed5e40b48234a42919d46436dd06c3f&pvs=4)🔗</br>
 
 ## 구현과정(설계 및 의도)
 
-TODO: 작성 필요
+팀원 별로 작성한 구현과정에 대한 노션 페이지 링크입니다.
+
+[회원가입 및 게시물 목록 구현 과정🔗](https://www.notion.so/0ebcd353eefc423c8483149aa340786f?pvs=4)</br>
+[기여 업무 개요🔗](https://www.notion.so/0a0e96c247e549a29c54c05e19eff271?pvs=4)</br>
+[엔티티 설계 및 게시물 작성, 상세조회 API 설계🔗](https://www.notion.so/API-5e41b73a93f44034aca207d46ba97930?pvs=4)</br>
+[요청 실패 시 공통 응답 형식을 반환하는 필터 구현🔗](https://www.notion.so/93d83ac32ba649ae9f699bbe99df40bd?pvs=4)</br>
 
 ## TIL
 
--   [팀 노션 페이지 TIL](https://www.notion.so/ce558ed53c1e46d38f34d66cb0a55087?v=8d07b98179a448ceb5e2e32284ceb906&pvs=4)
+프로젝트를 진행하며 작성했던 TIL을 서로 공유할 수 있도록 노션 페이지에 정리하였습니다.
+
+[![Notion](https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-badge&logo=notion&logoColor=white)](https://www.notion.so/ce558ed53c1e46d38f34d66cb0a55087?v=8d07b98179a448ceb5e2e32284ceb906&pvs=4)🔗</br>
+
+## 팀원
+
+<div align="center">
+
+</br>
+
+![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white) </br>
+
+<table>
+   <tr>
+     <td colspan='4' align="center">
+     </td>
+   </tr>
+   <tr>
+    <td align="center"><b><a href="https://github.com/cabbage556">김태윤🔗</a></b></td>
+    <td align="center"><b><a href="https://github.com/developersomin">안소민🔗</a></b></td>
+    <td align="center"><b><a href="https://github.com/haeseung123">이해원🔗</a></b></td>
+    <td align="center"><b><a href="https://github.com/DevJayKR">최준성🔗</a></b></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/cabbage556"><img src="https://avatars.githubusercontent.com/u/56855262?v=4" width="80px" /></a>
+    <td align="center"><a href="https://github.com/developersomin"><img src="https://avatars.githubusercontent.com/u/127207131?v=4" width="80px" /></a></td>
+    <td align="center"><a href="https://github.com/developersomin"><img src="https://avatars.githubusercontent.com/u/106800437?v=4" width="80px" /></a></td>
+    <td align="center"><a href="https://github.com/developersomin"><img src="https://avatars.githubusercontent.com/u/106816875?v=4" width="80px" /></a></td>
+  </tr>
+</table>
+
+</div>
+<br/>
